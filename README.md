@@ -52,3 +52,21 @@ go build main.go
 
 GOOS=windows GOARCH=amd64 go build -o main.exe main.go
 ```
+
+```
+docker pull postgres
+docker run --name some-postgres \
+  -p 5433:5432 \
+  -e POSTGRES_PASSWORD=root \
+  -d postgres
+
+docker exec -it some-postgres psql -U postgres
+select now();
+
+\l
+docker logs some-postgres | docker logs -f some-postgres
+
+
+docker exec -it some-postgres psql -U postgres
+    
+```
