@@ -30,7 +30,6 @@ sudo snap install sqlc
 sqlc version
 ```
 
-
 ```
 package main
 
@@ -47,26 +46,53 @@ func main() {
 
 ```
 go run main.go
-
 go build main.go
-
 GOOS=windows GOARCH=amd64 go build -o main.exe main.go
 ```
 
 ```
 docker pull postgres
-docker run --name some-postgres \
+docker run --name simple-postgres \
   -p 5433:5432 \
+  -e POSTGRES_USER=root \
   -e POSTGRES_PASSWORD=root \
+  -e POSTGRES_DB=simple_bank \
   -d postgres
+  
+ContainerName=simple-postgres
 
-docker exec -it some-postgres psql -U postgres
+docker exec -it simple-postgres psql -U root
 select now();
 
 \l
-docker logs some-postgres | docker logs -f some-postgres
+docker logs simple-postgres | docker logs -f simple-postgres
+docker exec -it simple-postgres psql -U postgres
 
+migrate create -ext sql -dir db/migration -seq init_schema
 
-docker exec -it some-postgres psql -U postgres
+docker exec -it simple-postgres sh
+createdb --username=root --owner=root simple_bank
+psql simple_bank | psql -U root -d simple_bank
+dropdb simple_bank
+
+SELECT pg_terminate_backend(pid)
+FROM pg_stat_activity
+WHERE datname = 'simple_bank' AND pid <> pg_backend_pid();
+
+docker exec -it simple-postgres createdb --username=root --owner=root simple_bank
+docker exec -it simple-postgres psql -U root simple_bank
+docker exec -it simple-postgres dropdb simple_bank
+
+make postgres
+make createdb
+make dropdb 
     
+migrate -path db/migration -database "postgresql://root:root@localhost:5433/simple_bank?sslmode=disable" -verbose up
+migrate -path db/migration -database "postgresql://root:root@localhost:5433/simple_bank?sslmode=disable" -verbose down
+
+go mod init github.com/tolebijaksybai/golang_backend
+go mod tidy
+
+https://github.com/techschool/simplebank/blob/master/db/query/transfer.sql
+
 ```
