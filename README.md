@@ -95,4 +95,16 @@ go mod tidy
 
 https://github.com/techschool/simplebank/blob/master/db/query/transfer.sql
 
+go test ./db/sqlc
+
+go get github.com/lib/pq
+go mod tidy
+
+go get github.com/stretchr/testify
+go mod tidy
+go clean -testcache
+
+go test -v -cover ./db/sqlc
+go test -v -count=1 -cover ./db/sqlc
+
 ```
