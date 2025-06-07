@@ -110,4 +110,6 @@ go test -v -count=1 -cover ./db/sqlc
 https://docs.github.com/en/actions/use-cases-and-examples/using-containerized-services/creating-postgresql-service-containers
 https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
 
+go get -u github.com/gin-gonic/gin
+go get github.com/go-playground/validator/v10
 ```
