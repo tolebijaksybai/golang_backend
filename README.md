@@ -112,4 +112,6 @@ https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
 
 go get -u github.com/gin-gonic/gin
 go get github.com/go-playground/validator/v10
+go get github.com/spf13/viper
+go get github.com/golang/mock/mockgen@v1.6.0
 ```
